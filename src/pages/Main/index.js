@@ -18,7 +18,6 @@ import {
   ProfileButton,
   ProfileButtonText,
 } from './styles';
-// import console = require('console');
 
 export default class Main extends Component {
   static navigationOptions = {
@@ -53,10 +52,12 @@ export default class Main extends Component {
   }
 
   handleAddUser = async () => {
-    const { users, newUser } = this.state;
-
     this.setState({ loading: true });
+    this.dataList();
+  };
 
+  dataList = async () => {
+    const { users, newUser } = this.state;
     const response = await api.get(`/users/${newUser}`);
 
     const data = {

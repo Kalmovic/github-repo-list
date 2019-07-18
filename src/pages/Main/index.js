@@ -34,6 +34,7 @@ export default class Main extends Component {
     newUser: '',
     users: [],
     loading: false,
+    error: false,
   };
 
   async componentDidMount() {
@@ -52,27 +53,42 @@ export default class Main extends Component {
   }
 
   handleAddUser = async () => {
-    this.setState({ loading: true });
+    this.setState({ loading: true, error: false });
     this.dataList();
   };
 
   dataList = async () => {
-    const { users, newUser } = this.state;
-    const response = await api.get(`/users/${newUser}`);
+    try {
+      const { users, newUser } = this.state;
+      const userL = newUser.toLowerCase();
+      console.tron.log(userL);
+      if (userL === '') {
+        throw 'Você precisa indicar um repositório';
+      }
+      const hasUser = users.find(u => u.login.toLowerCase() === userL);
+      if (hasUser) {
+        throw 'Repositório duplicado';
+      }
+      const response = await api.get(`/users/${userL}`);
 
-    const data = {
-      name: response.data.name,
-      login: response.data.login,
-      bio: response.data.bio,
-      avatar: response.data.avatar_url,
-    };
+      const data = {
+        name: response.data.name,
+        login: response.data.login,
+        bio: response.data.bio,
+        avatar: response.data.avatar_url,
+      };
 
-    this.setState({
-      users: [...users, data],
-      newUser: '',
-      loading: false,
-    });
-    Keyboard.dismiss();
+      this.setState({
+        users: [...users, data],
+        newUser: '',
+        loading: false,
+      });
+      Keyboard.dismiss();
+    } catch (error) {
+      this.setState({ error: true });
+    } finally {
+      this.setState({ loading: false });
+    }
   };
 
   handleNavigate = user => {
@@ -82,12 +98,13 @@ export default class Main extends Component {
   };
 
   render() {
-    const { users, newUser, loading } = this.state;
+    const { users, newUser, loading, error } = this.state;
 
     return (
       <Container>
         <Form>
           <Input
+            error={error}
             autoCorrect={false}
             autoCapitalize="none"
             placeholder="Add user"

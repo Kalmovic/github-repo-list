@@ -53,7 +53,14 @@ export default class User extends Component {
           <Bio>{user.bio}</Bio>
         </Header>
         {loading ? (
-          <ActivityIndicator color="#7159c1" />
+          <ActivityIndicator
+            style={{
+              alignItems: 'center',
+              height: 350,
+            }}
+            size="large"
+            color="#7159c1"
+          />
         ) : (
           <Stars
             data={stars}

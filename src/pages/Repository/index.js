@@ -1,21 +1,22 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import { Browser } from './styles';
 
-export default function Repository({ navigation }) {
-  console.tron.log(navigation);
-  const repository = navigation.getParam('repository');
+export default class Repository extends Component {
+  static navigationOptions = ({ navigation }) => ({
+    title: navigation.getParam('repository').name,
+  });
 
-  return <Browser source={{ uri: repository.html_url }} />;
+  static propTypes = {
+    navigation: PropTypes.shape({
+      getParam: PropTypes.func,
+    }).isRequired,
+  };
+
+  render() {
+    const { navigation } = this.props;
+    const repository = navigation.getParam('repository');
+    return <Browser source={{ uri: repository.html_url }} />;
+  }
 }
-
-Repository.propTypes = {
-  navigation: PropTypes.shape({
-    getParam: PropTypes.func,
-  }).isRequired,
-};
-
-Repository.navigationOptions = ({ navigation }) => ({
-  title: navigation.getParam('repository').name,
-});

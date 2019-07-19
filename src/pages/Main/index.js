@@ -35,6 +35,7 @@ export default class Main extends Component {
     users: [],
     loading: false,
     error: false,
+    errorText: 'Add user',
   };
 
   async componentDidMount() {
@@ -53,21 +54,22 @@ export default class Main extends Component {
   }
 
   handleAddUser = async () => {
-    this.setState({ loading: true, error: false });
+    this.setState({ loading: true, error: false, errorText: 'Add user' });
     this.dataList();
   };
 
   dataList = async () => {
     try {
       const { users, newUser } = this.state;
-      const userL = newUser.toLowerCase();
-      console.tron.log(userL);
+      const userL = newUser.toLowerCase().replace(/\s/g, '');
       if (userL === '') {
-        throw 'Você precisa indicar um repositório';
+        throw 'Please indicate a repository';
       }
-      const hasUser = users.find(u => u.login.toLowerCase() === userL);
+      const hasUser = users.find(
+        u => u.login.toLowerCase().replace(/\s/g, '') === userL
+      );
       if (hasUser) {
-        throw 'Repositório duplicado';
+        throw 'This repository is already listed';
       }
       const response = await api.get(`/users/${userL}`);
 
@@ -85,7 +87,7 @@ export default class Main extends Component {
       });
       Keyboard.dismiss();
     } catch (error) {
-      this.setState({ error: true });
+      this.setState({ error: true, errorText: error });
     } finally {
       this.setState({ loading: false });
     }
@@ -98,7 +100,7 @@ export default class Main extends Component {
   };
 
   render() {
-    const { users, newUser, loading, error } = this.state;
+    const { users, newUser, loading, error, errorText } = this.state;
 
     return (
       <Container>
@@ -107,7 +109,7 @@ export default class Main extends Component {
             error={error}
             autoCorrect={false}
             autoCapitalize="none"
-            placeholder="Add user"
+            placeholder={errorText}
             value={newUser}
             onChangeText={text => this.setState({ newUser: text })}
             returnKeyType="send"

@@ -12,7 +12,7 @@ Click this link and follow the steps:
 
 ### YouTube video:
 
-[![git react native](http://img.youtube.com/vi/0UN8E3eojkI/0.jpg)](http://www.youtube.com/watch?v=0UN8E3eojkI "git react native")
+[![git react native](https://imgur.com/gallery/7EUVnos)](http://www.youtube.com/watch?v=0UN8E3eojkI "git react native")
 
 
 ### To-do list:
